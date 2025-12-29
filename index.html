@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A reflective web experience exploring mathematical modeling metaphors in relationships, leading to an unexpected emotional conclusion.">
+    <meta name="keywords" content="mathematics, love, modeling, relationships, story, interactive">
+    <meta name="author" content="Kilo Code">
+    <title>The Math of Love</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', 'Georgia', serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #f7f7f7 100%);
+            color: #2c2c2c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        #container {
+            max-width: 650px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .scene {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            display: none;
+        }
+
+        .scene.active {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: #2c2c2c;
+        }
+
+        h2 {
+            font-size: 2em;
+            margin: 30px 0 20px 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin: 18px 0;
+            font-size: 1.15em;
+        }
+
+        ul {
+            text-align: left;
+            display: inline-block;
+            margin: 30px 0;
+            list-style: none;
+        }
+
+        li {
+            margin: 12px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        li::before {
+            content: '\2234';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .system-log {
+            background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 3px solid #888;
+            text-align: left;
+            display: inline-block;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .system-log h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.1em;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .system-log p {
+            margin: 8px 0;
+            font-size: 1em;
+        }
+
+        .cta {
+            background: none;
+            border: 2px solid #2c2c2c;
+            padding: 12px 35px;
+            margin-top: 35px;
+            cursor: pointer;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: #2c2c2c;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+            z-index: -1;
+        }
+
+        .cta:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta:hover {
+            color: white;
+        }
+
+        .signature {
+            font-style: italic;
+            margin-top: 40px;
+            color: #555;
+            font-size: 1.05em;
+        }
+
+        .math-equation {
+            font-size: 1.2em;
+            margin: 25px 0;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .answer-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .answer-btn {
+            background: none;
+            border: 2px solid #2c2c2c;
+            padding: 15px 40px;
+            cursor: pointer;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: #2c2c2c;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+            z-index: -1;
+        }
+
+        .answer-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .answer-btn:hover {
+            color: white;
+        }
+
+        .heart {
+            font-size: 1.5em;
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            margin: 0 5px;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .small-note {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 25px;
+            font-style: italic;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #2c2c2c, transparent);
+            margin: 20px 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            color: #d32f2f;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .modal-content p {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        .ignore-btn {
+            background: #888;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            margin-top: 25px;
+            cursor: pointer;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.05em;
+            transition: background 0.3s;
+        }
+
+        .ignore-btn:hover {
+            background: #666;
+        }
+
+        #finale {
+            background: linear-gradient(135deg, #ffe6e6 0%, #fff5f5 100%);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        #finale h1 {
+            color: #d32f2f;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #finale h2 {
+            color: #b71c1c;
+            font-weight: 600;
+        }
+
+        #finale p {
+            color: #5d4037;
+        }
+
+        #finale .heart {
+            color: #e91e63;
+            animation: heartbeat 2s ease-in-out infinite;
+            font-size: 3em;
+        }
+
+        #finale::before {
+            content: '♥';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            font-size: 2em;
+            color: #fce4ec;
+            opacity: 0.7;
+        }
+
+        #finale::after {
+            content: '♥';
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            font-size: 2em;
+            color: #fce4ec;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            #container {
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            .cta, .answer-btn {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+
+            .answer-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .math-equation {
+                font-size: 1em;
+                padding: 15px;
+            }
+
+            .system-log {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            #container {
+                padding: 15px;
+            }
+
+            .cta, .answer-btn {
+                padding: 8px 15px;
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="prologue" class="scene active">
+            <h1>The Math of Love</h1>
+            <h4>By Josophat Makawa</h4>
+            <hr>
+            <p>This is not a test.</p>
+            <p>It is a short story about models, assumptions, and what happens when they fail.</p>
+            <button class="cta" onclick="goToScene('assumptions')">Continue</button>
+        </div>
+
+        <div id="assumptions" class="scene">
+            <p>In mathematics, we begin with assumptions.</p>
+            <p>Not because they are true, but because they make reasoning possible.</p>
+            <p>Three assumptions were adopted:</p>
+            <ul>
+                <li>Logic explains behavior.</li>
+                <li>Attention follows predictable rules.</li>
+                <li>Emotion can be ignored without consequence.</li>
+            </ul>
+            <button class="cta" onclick="goToScene('model')">Proceed</button>
+        </div>
+
+        <div id="model" class="scene">
+            <p>A model was constructed.</p>
+            <p>It described focus as a function of proximity, interest as a measurable variable, and detachment as a stable state.</p>
+            <div class="math-equation">
+                \[f(x) = k \cdot \frac{1}{d(x, \text{you})}\]
+            </div>
+            <p>On paper, the model was elegant.</p>
+            <button class="cta" onclick="showWarning()">Continue</button>
+        </div>
+
+        <div id="warning-modal" class="modal">
+            <div class="modal-content">
+                <h3>⚠ System Warning</h3>
+                <p><strong>Warning: Variable 'you' not declared in original scope</strong></p>
+                <p>This variable was not part of the initial model specification.</p>
+                <p>Continuing may result in unpredictable behavior and complete system instability.</p>
+                <button class="ignore-btn" onclick="ignoreWarning()">Ignore and Continue</button>
+            </div>
+        </div>
+
+        <div id="anomaly" class="scene">
+            <p>At a particular boundary condition, the predictions began to drift.</p>
+            <p>As one variable approached a specific individual, the system no longer behaved as expected.</p>
+            <div class="system-log">
+                <h3>System Log</h3>
+                <p>Assumptions: Violated</p>
+                <p>Stability: Lost</p>
+                <p>Emotional Terms: Introduced</p>
+                <p>Note: Emotional terms excluded due to optimism bias</p>
+                <p>Error: UNDEFINED (Division by zero at x = you)</p>
+            </div>
+            <button class="cta" onclick="goToScene('contradiction')">Observe Outcome</button>
+        </div>
+
+        <div id="contradiction" class="scene">
+            <p>The original hypothesis was reconsidered:</p>
+            <p><em>Individuals oriented toward logic are unaffected by emotion.</em></p>
+            <p>If this were true, the observed data would be impossible.</p>
+            <p>And yet, the data persisted.</p>
+            <button class="cta" onclick="goToScene('conclusion')">Resolve</button>
+        </div>
+
+        <div id="conclusion" class="scene">
+            <p>The hypothesis was false.</p>
+            <p>Not because the math was wrong, but because it was incomplete.</p>
+            <p>Some variables are not errors.</p>
+            <p>They are the point.</p>
+            <p>And in this model, there was only one.</p>
+            <p style="font-size: 1.3em; margin: 30px 0;"><strong>You.</strong></p>
+            <button class="cta" onclick="goToScene('proposal')">Therefore...</button>
+        </div>
+
+        <div id="proposal" class="scene">
+            <p>Given the proof above,</p>
+            <p>Given that all models fail in your presence,</p>
+            <p>Given that logic ends where you begin,</p>
+            <div class="math-equation">
+                \[\lim_{t \to \infty} \text{love}(t) = \infty\]
+            </div>
+            <h2>Would you be my Girlfriend and explore this model with me?</h2>
+            <div class="answer-buttons">
+                <button class="answer-btn" onclick="handleAnswer()">Yes <span class="heart">&#9829;</span></button>
+                <button class="answer-btn" onclick="handleAnswer()">Let's find out <span class="heart">&#9829;</span></button>
+            </div>
+            <p class="small-note">The proof remains open-ended.</p>
+            <p class="signature">From someone who trusts logic and has learned where it ends</p>
+        </div>
+
+        <div id="finale" class="scene">
+            <div class="fade-in">
+                <h1 style="font-size: 3em; margin-bottom: 20px;">&#8718;</h1>
+                <h2>Q.E.D.</h2>
+                <p style="font-size: 1.3em; margin: 30px 0;">The proof is incomplete.</p>
+                <p style="font-size: 1.3em;">Further exploration is encouraged.</p>
+                <p style="font-size: 2em; margin: 40px 0;"><span class="heart">&#9829;</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScene = document.getElementById('prologue');
+
+        function goToScene(sceneId) {
+            currentScene.classList.remove('active');
+            setTimeout(function() {
+                currentScene.style.display = 'none';
+                currentScene = document.getElementById(sceneId);
+                currentScene.style.display = 'block';
+                setTimeout(function() {
+                    currentScene.classList.add('active');
+                }, 50);
+            }, 600);
+        }
+
+        function showWarning() {
+            document.getElementById('warning-modal').classList.add('active');
+        }
+
+        function ignoreWarning() {
+            document.getElementById('warning-modal').classList.remove('active');
+            setTimeout(function() {
+                goToScene('anomaly');
+            }, 300);
+        }
+
+        function handleAnswer() {
+            goToScene('finale');
+        }
+    </script>
+</body>
+</html>
